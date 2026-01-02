@@ -15,21 +15,22 @@ import { ref, onMounted } from 'vue'
         </video> -->
 
         <!-- Photo background -->
-        <img src="/images/bg-gate.jpg" alt="Background"
-          class="absolute inset-0 w-full h-full object-cover bg-fixed no-repeat" />
+        <div class="absolute inset-0 w-full h-full bg-center bg-fixed bg-no-repeat"
+          style="background-image: url('/images/bg-gate.jpg'); background-size: cover; @media (min-width: 768px) { background-size: 100% 100%; }">
+        </div>
 
         <!-- Overlay -->
         <!-- <div class="absolute inset-0 bg-black opacity-30"></div> -->
 
         <div class="relative z-10 flex flex-col justify-center pt-40 items-center text-center">
-          <h1 class="text-3xl md:text-5xl font-moul leading-relaxed lg:text-6xl mb-4 text-pink-600   text-center">
+          <h1 class="text-2xl md:text-2xl font-moul leading-relaxed lg:text-4xl text-[#7B1F2A] text-center py-2">
             សិរីមង្គលអាពាហ៍ពិពាហ៍
           </h1>
-          <p class="text-lg md:text-xl lg:text-2xl mb-8 text-white text-center max-w-md">
+          <p class="text-lg md:text-xl lg:text-2xl mb-8 text-[#7B1F2A] text-center max-w-md">
             The Wedding Day
           </p>
           <img src="/images/mark-png-pink.svg" alt="Ornament" class="w-66 mb-8" />
-          <h3 class="text-xl md:text-xl font-moul leading-relaxed lg:text-6xl mb-4 text-pink-600 text-center">
+          <h3 class="text-xl md:text-xl font-moul leading-relaxed lg:text-6xl mb-4 text-[#7B1F2A] text-center">
             សូមគោរពអញ្ជើញ
           </h3>
           <p class="text-lg md:text-xl font-moul lg:text-2xl mb-8 text-white text-center max-w-md">
@@ -49,11 +50,15 @@ import { ref, onMounted } from 'vue'
     <transition name="fade">
       <section v-if="opened && step === 1" class="story-screen">
         <div
-          class="min-h-screen w-full flex flex-col justify-end items-center bg-linear-to-br from-purple-500 via-pink-500 to-red-500 px-4">
+          class="min-h-screen w-full flex flex-col justify-end items-center px-4">
           <!-- Photo background -->
           <img src="/img6.jpg" class="absolute inset-0 w-full h-full object-cover" />
-          <div class="story-text relative z-10 flex flex-col justify-center items-center mb-10 text-center px-4">
-            <p class="text-black">{{ displayedText }}</p>
+          <div class="absolute bottom-0 left-0 right-0 z-10">
+            <transition name="fade-up">
+              <div class="bg-black/50 backdrop-blur-sm p-8 text-center">
+                <p class="text-white text-2xl font-moul">Save the date</p>
+              </div>
+            </transition>
           </div>
         </div>
       </section>
@@ -62,10 +67,10 @@ import { ref, onMounted } from 'vue'
     <!-- Main Invitation -->
     <section v-if="opened && step === 2" class="invitation">
       <div
-        class="relative min-h-screen w-full flex flex-col justify-start items-center bg-linear-to-br from-purple-500 via-pink-500 to-red-500 px-4">
+        class="relative min-h-screen w-full flex flex-col justify-start items-center px-4">
         <!-- Photo background -->
         <div class="absolute inset-0 w-full h-full bg-center bg-fixed bg-no-repeat"
-          style="background-image: url('/images/bg-gate.jpg'); background-size: contain; @media (min-width: 768px) { background-size: 100% 100%; }">
+          style="background-image: url('/images/bg-gate.jpg'); background-size: cover; @media (min-width: 768px) { background-size: 100% 100%; }">
         </div>
 
         <!-- Overlay -->
@@ -291,20 +296,22 @@ import { ref, onMounted } from 'vue'
                 </div>
               </div>
 
-              <transition name="fade">
-                <div v-if="selectedImg"
-                  class="absolute inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-                  @click="closeLightbox">
-                  <button class="absolute top-6 right-6 text-white text-4xl hover:text-gray-300 transition"
+              <Teleport to="body">
+                <transition name="fade">
+                  <div v-if="selectedImg"
+                    class="fixed inset-0 z-[1000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
                     @click="closeLightbox">
-                    &times;
-                  </button>
+                    <button class="absolute top-6 right-6 text-white text-4xl hover:text-gray-300 transition"
+                      @click="closeLightbox">
+                      &times;
+                    </button>
 
-                  <img :src="selectedImg"
-                    class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-all" @click.stop />
-                  <p class="absolute bottom-6 text-white/60 text-sm">Click anywhere to close</p>
-                </div>
-              </transition>
+                    <img :src="selectedImg"
+                      class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-all" @click.stop />
+                    <p class="absolute bottom-6 text-white/60 text-sm">Click anywhere to close</p>
+                  </div>
+                </transition>
+              </Teleport>
             </div>
           </div>
         </div>
@@ -325,6 +332,17 @@ import { ref, onMounted } from 'vue'
   opacity: 0;
 }
 
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: all 0.5s ease;
+}
+
+.fade-up-enter-from,
+.fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(100px) translateX(-100px);
+}
+
 /* Prevent body scroll when lightbox is open */
 .modal-open {
   overflow: hidden;
@@ -338,10 +356,6 @@ export default {
       opened: false,
       questName: '',
       step: 1,
-      storyTexts: [
-        "Once upon a time, in a land far away...",
-      ],
-      displayedText: '',
       audio: null,
       selectedImg: null,
       images: [
@@ -379,35 +393,11 @@ export default {
 
       this.opened = true
 
-      //typing effect for story texts
-      let currentTextIndex = 0
-      const typeNextText = () => {
-        if (currentTextIndex < this.storyTexts.length) {
-          const fullText = this.storyTexts[currentTextIndex]
-          let currentCharIndex = 0
-          this.displayedText = ''
-          const typingInterval = setInterval(() => {
-            if (currentCharIndex < fullText.length) {
-              this.displayedText += fullText[currentCharIndex]
-              currentCharIndex++
-            } else {
-              clearInterval(typingInterval)
-            }
-          }, 50)
-          setTimeout(() => {
-            currentTextIndex++
-            typeNextText()
-          }, fullText.length * 100 + 2000) // wait for typing to finish + 2 seconds
-        } else {
-          this.step = 2
-        }
-      }
-      typeNextText()
+      // Wait 3 seconds then go to next step
+      setTimeout(() => {
+        this.step = 2
+      }, 3000)
     },
-    openLightbox(url) {
-      this.selectedImg = url
-    },
-
     closeLightbox() {
       this.selectedImg = null
     }
