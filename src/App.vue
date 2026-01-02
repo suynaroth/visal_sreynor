@@ -8,7 +8,7 @@ import { ref, onMounted } from 'vue'
     <!-- Landing Section -->
     <section v-if="!opened" class="landing">
       <div
-        class="min-h-screen w-full flex flex-col justify-start items-center bg-linear-to-br from-purple-500 via-pink-500 to-red-500 px-4">
+        class="min-h-screen w-full flex flex-col justify-start items-center px-4">
         <!-- Video element -->
         <!-- <video autoplay muted playsinline class="absolute top-0 left-0 w-full h-full object-cover">
           <source src="/images/vdo.mp4" type="video/mp4">
